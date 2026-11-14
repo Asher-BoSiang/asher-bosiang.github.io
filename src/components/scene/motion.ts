@@ -38,21 +38,22 @@ export function entranceWave(x: number, z: number, m: ArchiveMotion) {
   return 12 * (1-progress)**3;
 }
 
-function rowPulse(columnOffset: number, depth: number, age: number) {
+function rowPulse(depth: number, age: number) {
   const distance = Math.abs(depth);
-  const progress = (age - distance * .19 - Math.abs(columnOffset) * .08) / .8;
+  const progress = (age - distance * .19) / .8;
   if (progress <= 0 || progress >= 1) return 0;
-  const amplitude = Math.abs(columnOffset) < .01 ? .30 : .025 / (1 + Math.abs(columnOffset));
-  return amplitude * Math.exp(-distance * .36) * Math.sin(Math.PI * progress) ** 2;
+  return .30 * Math.exp(-distance * .36) * Math.sin(Math.PI * progress) ** 2;
 }
 
 export function waveOffset(x:number,z:number,m:ArchiveMotion,column = x) {
   if(!m.enabled||m.reduced)return 0;
   const distance=(x-m.x*8)**2/8+(z-m.y*5)**2/24;
   const age = m.time - m.pulseAt;
-  const lift = rowPulse(column-m.pulseX,z,age);
-  const release = rowPulse(column-m.releasedX,z,age);
-  return idleWave(x,z,m.time)+lift-release+Math.exp(-distance)*m.energy*.16;
+  let strength = 0;
+  if (column === m.pulseX) strength = 1;
+  else if (column === m.releasedX) strength = -1;
+  else if (Number.isFinite(m.releasedX)) strength = -.8;
+  return idleWave(x,z,m.time) + strength * rowPulse(z,age) + Math.exp(-distance)*m.energy*.16;
 }
 export const initialPose = () => ({ x: 0, y: .22, z: 0, ry: CASE_ANGLE + ROW_ANGLE, rx: 0, scale: 1, lid: 0, discOut: 0, discTravel: 0, shelfY: 0, caseExit: 0, playerY: 12, tray: 0 });
 export type Pose = ReturnType<typeof initialPose>;

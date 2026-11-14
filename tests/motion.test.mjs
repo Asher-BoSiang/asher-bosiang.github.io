@@ -36,12 +36,21 @@ test('settled cases keep a low-amplitude travelling wave without input',()=>{
   assert.notEqual(idleWave(0,0,100),idleWave(0,3,100));
 });
 test('selection ripple reaches nearby cases first and decays back to rest',()=>{
-  const m={time:100.1,enteredAt:0,pulseAt:100,releasedX:Infinity,pulseX:0,x:0,y:0,drag:0,energy:0,enabled:true,reduced:false};
+  const m={time:100.1,enteredAt:0,pulseAt:100,releasedX:-2.59,pulseX:0,x:0,y:0,drag:0,energy:0,enabled:true,reduced:false};
   const ripple=(x,z,t)=>waveOffset(x,z,{...m,time:t})-waveOffset(x,z,{...m,time:t,pulseAt:-100});
   assert.ok(ripple(0,.28,100.4)>.2);
   assert.equal(ripple(0,2,100.1),0);
   assert.ok(ripple(0,2,100.8)>0);
-  assert.ok(ripple(2.59,.28,100.4)<.025);
+  for (const depth of [-.56,.28,1.4]) {
+    for (const age of [.1,.4,.7,.9,1.2]) {
+      const released = ripple(-2.59,depth,100+age);
+      assert.ok(released<=0);
+      for (const column of [-5.18,2.59,10.36]) {
+        assert.ok(Math.abs(ripple(column,depth,100+age)-released*.8)<1e-10);
+      }
+    }
+  }
+  assert.ok(ripple(-2.59,.28,100.4)<-.2);
   assert.equal(ripple(0,.28,102),0);
   assert.equal(waveOffset(0,0,{...m,reduced:true}),0);
 });
