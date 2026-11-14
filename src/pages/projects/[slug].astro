@@ -1,0 +1,16 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+export async function getStaticPaths() { return (await getCollection('projects')).map(p => ({ params: { slug: p.id }, props: { project: p } })); }
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+<Layout title={`${project.data.title} — Asher Wang`} description={project.data.shortDescription}>
+  <header class="standalone-header"><a class="wordmark" href={import.meta.env.BASE_URL}>AW<span>ASHER WANG<br/>ENGINEERING PORTFOLIO</span></a><a href={`${import.meta.env.BASE_URL}#project-index`}>← Back to collection</a></header>
+  <main id="main-content" class="standalone prose" style={`--accent:${project.data.themeColor}`}>
+    <p class="eyebrow">Selected work / {String(project.data.displayOrder).padStart(2,'0')}</p>
+    <h1>{project.data.title}</h1><p class="lead">{project.data.shortDescription}</p>
+    <div class="tags">{project.data.technologies.map(t => <span>{t}</span>)}</div>
+    <Content /><a class="primary-link" href={project.data.githubUrl} target="_blank" rel="noreferrer">View source repository ↗</a>
+  </main>
+</Layout>

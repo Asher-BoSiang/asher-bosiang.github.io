@@ -1,0 +1,28 @@
+---
+title: "Four-MCU Memory Game"
+shortDescription: "A physical two-player game. Four 8052 microcontrollers coordinate input, patterns, timing, and scoring."
+category: "Firmware / Digital hardware"
+technologies: ["8052 Assembly", "AT89S52", "GPIO", "Keil", "PCB Design"]
+themeColor: "#678c9c"
+githubUrl: "https://github.com/Asher-BoSiang/memory-game-with-8052-microcontroller"
+displayOrder: 4
+---
+## Overview
+A two-player memory game built around four AT89S52 microcontrollers and custom circuit boards. Players reproduce an LED pattern using matrix keypads while the system manages a countdown and score displays.
+
+## System architecture
+<div className="architecture"><span>Two keypad MCUs</span><b>→ GPIO →</b><span>Game controller</span><b>→</b><span>LED / timer MCU</span></div>
+
+Each MCU has a dedicated role: game control, player-one input, player-two input, or the LED display. A three-bit active-low selection code communicates the pattern table. Separate GPIO lines signal correct answers.
+
+## Implementation
+Assembly programs scan the keypads, compare inputs with tables in program memory, and update seven-segment displays. The game controller polls answer lines and advances round state. The documented LED countdown uses Timer0.
+
+## Technical challenges
+Independent clocks and shared GPIO signals make timing and pin assignment important. The hardware documentation also discusses etched trace width, component connections, and breadboard bring-up before final assembly.
+
+## Results and current limits
+The public project includes four assembly programs, circuit diagrams, PCB layouts, and assembled-hardware photos. The controller source uses three predefined pattern selections; the portfolio does not imply a random pattern generator. Timing and electrical behavior have not been remeasured for this site.
+
+## Source notes
+Based on the [README and hardware documentation](https://github.com/Asher-BoSiang/memory-game-with-8052-microcontroller/blob/main/README.md) and [game controller source](https://github.com/Asher-BoSiang/memory-game-with-8052-microcontroller/blob/main/Button.asm).
