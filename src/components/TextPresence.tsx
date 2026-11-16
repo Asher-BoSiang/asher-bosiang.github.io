@@ -10,7 +10,12 @@ export default function TextPresence({show=true,identity='',reduced=false,childr
   if(displayed===identity&&show&&!exiting)content.current=children;
   useEffect(()=>{
     if(reduced){content.current=latest.current;setDisplayed(identity);setVisible(show);setExiting(false);return;}
-    if(show&&displayed===identity&&visible)return;
+    if(show&&displayed===identity&&visible){
+      // A quick return can interrupt the outgoing fade before its timer fires.
+      content.current=latest.current;
+      setExiting(false);
+      return;
+    }
     if(!visible&&show){content.current=latest.current;setDisplayed(identity);setVisible(true);setExiting(false);return;}
     if(!visible)return;
     setExiting(true);
