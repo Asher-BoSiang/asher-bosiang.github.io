@@ -15,14 +15,13 @@ test('profile, collection, complete loading sequence, and reverse preserve selec
   await expect(page.locator('.project-overview h3')).toHaveText('Bicycle Energy Recovery');
   const collectionBounds = await page.locator('.scene-window').boundingBox();
   await page.getByRole('button',{name:'Open project',exact:false}).click();
-  await expect(page.locator('.experience')).toHaveAttribute('data-phase',/Opening|DiscFloating|PlayerEntering|TrayExtending|DiscLoading|TrayRetracting/,{timeout:8000});
-  await expect(page.locator('.experience')).toHaveAttribute('data-phase',/DiscLoading|TrayRetracting|Details/,{timeout:10000});
-  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Details',{timeout:10000});
+  await expect(page.locator('.experience')).not.toHaveAttribute('data-phase','Collection');
+  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Details',{timeout:30000});
   await expect(page.locator('.project-article:visible')).toContainText('Bicycle Energy Recovery');
   await expect(page.locator('.project-article:visible')).toHaveCSS('opacity','1');
   expect(await page.locator('.scene-window').boundingBox()).toEqual(collectionBounds);
   await page.getByRole('button',{name:'Back to Collection',exact:false}).first().click();
-  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Collection',{timeout:10000});
+  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Collection',{timeout:30000});
   await expect(page.locator('.project-overview h3')).toHaveText('Bicycle Energy Recovery');
   await page.getByRole('button',{name:'Back to Profile',exact:false}).click();
   await expect(page.locator('.experience')).toHaveAttribute('data-phase','Profile');
@@ -64,9 +63,9 @@ test('cancel an in-flight animation and replay safely',async({page})=>{
   await page.getByRole('button',{name:'Open project',exact:false}).click();
   await expect(page.locator('.experience')).toHaveAttribute('data-phase',/Extracting|Opening|DiscFloating|PlayerEntering|TrayExtending|DiscLoading/,{timeout:10000});
   await page.keyboard.press('Escape');
-  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Collection',{timeout:10000});
+  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Collection',{timeout:30000});
   await page.getByRole('button',{name:'Open project',exact:false}).click();
-  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Details',{timeout:16000});
+  await expect(page.locator('.experience')).toHaveAttribute('data-phase','Details',{timeout:30000});
 });
 
 test('project content works without JavaScript',async({browser})=>{

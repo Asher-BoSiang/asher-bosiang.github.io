@@ -33,7 +33,11 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
   const cameraSpace = useRef(new THREE.Vector3());
   const flatRotation = useRef(new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI/2,0,0)));
   const currentPhase = useRef(phase); currentPhase.current=phase;
-  useEffect(()=>{onReady();},[onReady]);
+  useEffect(()=>{
+    // Keep the player transport on real time even when software WebGL drops frames.
+    gsap.ticker.lagSmoothing(0);
+    onReady();
+  },[onReady]);
   useEffect(()=>{const environment=new RoomEnvironment();const pmrem=new THREE.PMREMGenerator(gl);const map=pmrem.fromScene(environment,.06);scene.environment=map.texture;scene.environmentIntensity=.35;invalidate();return()=>{scene.environment=null;map.dispose();pmrem.dispose();environment.dispose();};},[gl,scene,invalidate]);
   useEffect(()=>{
     const mobile=size.width<760;
@@ -65,7 +69,7 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
     } else if(phase==='Returning') {
       insertOnEntry.current=true;
       const tl=timeline.current;
-      if(tl) { tl.eventCallback('onReverseComplete',()=>{onPhase('Collection');invalidate();}); tl.timeScale(1.35).reverse(); if(reduced) {tl.progress(0).pause();onPhase('Collection');} }
+      if(tl && tl.time() > 0) { tl.eventCallback('onReverseComplete',()=>{onPhase('Collection');invalidate();}); tl.timeScale(1.35).reverse(); if(reduced) {tl.progress(0).pause();onPhase('Collection');} }
       else {Object.assign(pose.current,initialPose());onPhase('Collection');}
     } else if(phase==='Collection' || phase==='Profile') {
       if(phase==='Profile') insertOnEntry.current=false;
@@ -200,7 +204,13 @@ class Boundary extends Component<{ children:ReactNode; onFailure:()=>void },{fai
 }
 export default function Scene(props:SceneProps) {
   const [contextLost,setContextLost]=useState(false);
-  return <Boundary onFailure={props.onFailure}>{!contextLost&&<Canvas orthographic frameloop="demand" shadows dpr={[1,1.25]} camera={{zoom:80,near:.1,far:100}} gl={{antialias:true,alpha:false,powerPreference:'default'}} onCreated={({gl})=>{
+  return <Boundary onFailure={props.onFailure}>{!contextLost&&<Canvas orthographic frameloop="demand" shadows dpr={[1,1.25]} camera={{zoom:80,near:.1,far:100}} gl={{antialias:true,alpha:false,powerPreference:'default'}} onCreated={({gl,setDpr})=>{
+    const context = gl.getContext();
+    const debug = context.getExtension('WEBGL_debug_renderer_info');
+    if (debug && /swiftshader|llvmpipe|software rasterizer/i.test(context.getParameter(debug.UNMASKED_RENDERER_WEBGL))) {
+      setDpr(.7);
+      gl.shadowMap.enabled = false;
+    }
     gl.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();setContextLost(true);props.onFailure();},{once:true});
   }}><World {...props}/></Canvas>}</Boundary>;
 }
