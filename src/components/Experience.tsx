@@ -72,7 +72,7 @@ export default function Experience({projects,base,children}:{projects:Project[];
       <section className="profile-panel" aria-label="Personal profile" inert={phase!=='Profile'}>
         <div className="profile-topline"><p className="eyebrow"><span className="status-dot"/>Software meets the physical world</p><span className="micro">PORTFOLIO / VOL. 01</span></div>
         <div className="profile-grid">
-          <div className="profile-copy"><p className="eyebrow">Hello, I'm</p><h1>Asher<br/><span>Wang.</span></h1>
+          <div className="profile-copy"><h1>Asher<br/><span>Wang.</span></h1>
             <div className="education"><span className="small-cross">+</span><div><strong>{profile.university}</strong><span>{profile.degree}</span></div></div>
             <h2>{profile.headline}</h2>
             <button className="explore" disabled={!hydrated} onClick={explore}>Explore Projects <span>→</span></button>
@@ -83,13 +83,12 @@ export default function Experience({projects,base,children}:{projects:Project[];
               <a href={profile.resume} target="_blank" rel="noreferrer">Résumé ↗</a>
             </div>
           </div>
-          <div className="profile-art" aria-label="Profile portrait placeholder">
-            <div className="art-corner top">FIG. 01 / THE ENGINEER</div>
-            {profile.photo?<img className="portrait" src={profile.photo} alt="Asher Wang"/>:<><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="orbit orbit-three"/><div className="portrait-monogram">aw<span>PORTRAIT TO BE ADDED</span></div><div className="orbit-point"/></>}
-            <div className="art-corner bottom"><span>HARDWARE ↔ SOFTWARE</span><span>+ 01</span></div>
-          </div>
+          <a className="featured-build" href={base+'projects/8052-memory-game/'}>
+            <img src={base+'project-images/memory.webp'} width="788" height="654" alt="Assembled memory game with two physical keypads and an LED grid"/>
+            <div><span className="eyebrow">8052 Assembly · PCB design</span><strong>Four-MCU Memory Game <span aria-hidden="true">↗</span></strong></div>
+          </a>
         </div>
-        <div className="profile-bottom"><div><p className="eyebrow">Technical toolkit</p><div className="skill-line">{profile.skills.map(s=><span key={s}>{s}</span>)}</div><p className="interests">Exploring / {profile.interests.join(' · ')}</p></div><div className="experience-note"><p className="eyebrow">Experience</p><strong>{profile.experience.company}</strong><p>{profile.experience.role}</p><small>Dates & full role details to be added</small></div></div>
+        <div className="profile-bottom"><div><p className="eyebrow">Technical toolkit</p><div className="skill-line">{profile.skills.map(s=><span key={s}>{s}</span>)}</div><p className="interests">Exploring / {profile.interests.join(' · ')}</p></div><div className="experience-note"><p className="eyebrow">Experience</p><strong>{profile.experience.company}</strong><p>{profile.experience.role}</p></div></div>
         <div className="explore-bar"><span className="micro">A COLLECTION OF SYSTEMS & IDEAS</span><a className="micro" href="#project-index">Browse text index ↗</a></div>
       </section>
       <section className="collection-panel" aria-label="Project collection" inert={phase==='Profile'}>

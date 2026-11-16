@@ -8,15 +8,15 @@ githubUrl: "https://github.com/Asher-BoSiang/qnx-Intelligent-cockpit-hmi"
 displayOrder: 2
 ---
 ## Overview
-An internship project at AUO Corporation, documented publicly as an architecture showcase. The development path moves from Python/PyQt prototyping on Linux to a C++/Qt interface on a QNX automotive head unit.
+An automotive HMI developed during an internship at AUO Corporation. Development moved from Python/PyQt prototyping on Linux to a C++/Qt interface on a QNX automotive head unit.
 
 ## System architecture
 <div className="architecture"><span>Voice / AI prototype</span><b>→</b><span>Status controller</span><b>→</b><span>Qt / QNX interface</span></div>
 
-The documented prototype uses a Python assistant with LangChain and Gemini 1.5 Flash. DALL·E 3 supplies generated backgrounds; color extraction informs interface accents.
+The prototype uses a Python assistant with LangChain and Gemini 1.5 Flash. DALL·E 3 supplies generated backgrounds; color extraction informs interface accents.
 
 ## Implementation
-The public documentation describes a C++ implementation of K-means clustering for dominant-color extraction. Theme accents follow the generated background within a user-selected light or dark mode. Structured prompts constrain image composition around driving information.
+A C++ implementation of K-means clustering extracts dominant colors. Theme accents follow the generated background within a user-selected light or dark mode. Structured prompts constrain image composition around driving information.
 
 <figure className="project-figure">
   <img src={import.meta.env.BASE_URL + "project-images/cockpit.webp"} width="1440" height="580" alt="Concept illustration of a dark cockpit display with circular gauges flanking a city background." loading="lazy" decoding="async" />
@@ -26,8 +26,5 @@ The public documentation describes a C++ implementation of K-means clustering fo
 ## Technical challenges
 The central engineering work is the transition between a flexible Linux prototype and the embedded QNX target, alongside maintaining readable visual hierarchy when generated backgrounds vary.
 
-## Results and disclosure
-The repository reports a completed prototype and migration to the QNX target. Source code and actual interface assets are withheld under NDA. Its published images are conceptual schematics, not production screenshots. This portfolio summarizes the public documentation only and does not independently validate accuracy or performance claims.
-
-## Source notes
-See the [public technical showcase](https://github.com/Asher-BoSiang/qnx-Intelligent-cockpit-hmi/blob/main/README.md) for the architecture, conceptual visualizations, and reported development process.
+## Results
+The Linux prototype was migrated to C++ and Qt on a QNX head unit. Production interface assets and source code are withheld under NDA.

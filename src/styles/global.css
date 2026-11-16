@@ -63,3 +63,10 @@
 .prose .project-figure{margin:25px 0 30px;border:1px solid var(--line);background:#f6f5ef;padding:clamp(10px,2vw,22px)}
 .project-figure img{display:block;width:100%;height:auto;max-height:32rem;object-fit:contain}
 .project-figure figcaption{margin-top:14px;padding:10px 0 0 12px;border-top:1px solid var(--line);border-left:2px solid var(--accent);font:12px/1.6 monospace;color:#515b50}
+
+.featured-build{display:grid;align-self:center;justify-self:end;width:min(100%,500px);padding:12px;border:1px solid var(--line);background:#eeede5;transition:border-color .2s}
+.featured-build:hover{border-color:#687b64}
+.featured-build img{width:100%;height:clamp(175px,33vh,330px);object-fit:cover;object-position:center 56%}
+.featured-build>div{padding:15px 5px 4px}
+.featured-build strong{display:flex;justify-content:space-between;margin-top:5px;font-size:clamp(18px,2vw,29px);letter-spacing:-.045em;font-weight:500}
+@media(max-width:760px){.featured-build{justify-self:stretch;width:100%}.featured-build img{height:180px}}

@@ -26,8 +26,5 @@ Assembly programs scan the keypads, compare inputs with tables in program memory
 ## Technical challenges
 Independent clocks and shared GPIO signals make timing and pin assignment important. The hardware documentation also discusses etched trace width, component connections, and breadboard bring-up before final assembly.
 
-## Results and current limits
-The public project includes four assembly programs, circuit diagrams, PCB layouts, and assembled-hardware photos. The controller source uses three predefined pattern selections; the portfolio does not imply a random pattern generator. Timing and electrical behavior have not been remeasured for this site.
-
-## Source notes
-Based on the [README and hardware documentation](https://github.com/Asher-BoSiang/memory-game-with-8052-microcontroller/blob/main/README.md) and [game controller source](https://github.com/Asher-BoSiang/memory-game-with-8052-microcontroller/blob/main/Button.asm).
+## Results
+Four assembly programs coordinate two keypads, a shared LED grid, and the score displays. The controller cycles through three predefined pattern selections.

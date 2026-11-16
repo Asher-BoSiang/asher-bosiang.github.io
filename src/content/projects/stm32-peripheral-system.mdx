@@ -26,8 +26,5 @@ The byte-by-byte parser waits for a `0xAA` start byte, reads a command and paylo
 ## Technical challenges
 Flash page boundaries and shared-memory access are the main design constraints. The firmware uses a packed 16-byte log record to divide a 256-byte page evenly. A mutex coordinates sensor updates and logger snapshots.
 
-## Results and current limits
-The public repository includes firmware, a host GUI, protocol test tooling, and demonstrations. Logging is currently limited to a single erased sector. Multi-sector logging, DMA transfers, wear leveling, and CRC-16 are future work, not implemented portfolio claims. Hardware performance has not been independently benchmarked for this portfolio.
-
-## Source notes
-Based on the public [README](https://github.com/Asher-BoSiang/stm32-freertos-peripheral-system/blob/main/README.md), [task implementation](https://github.com/Asher-BoSiang/stm32-freertos-peripheral-system/blob/main/Core/Src/freertos.c), and [protocol parser](https://github.com/Asher-BoSiang/stm32-freertos-peripheral-system/blob/main/Core/Src/protocol.c). Original demonstrations are available in the repository.
+## Results
+The host can inspect live samples and retrieve logs over UART. Each 256-byte flash page holds sixteen records. Logging currently uses one erased sector.

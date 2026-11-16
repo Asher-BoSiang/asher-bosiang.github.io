@@ -5,10 +5,9 @@ export const profile = {
   university: 'University of Illinois Urbana-Champaign',
   skills: ['C / C++', 'FreeRTOS', 'STM32', 'QNX / Linux', 'Qt', 'I²C / SPI / UART', 'Python', '8052 Assembly'],
   interests: ['Linux Kernel', 'Systems Programming', 'Digital Signal Processing'],
-  experience: { role: 'Intelligent Cockpit HMI', company: 'AUO Corporation · Internship', description: 'Linux prototyping and C++ / Qt development for a QNX automotive head unit. Dates and full role details to be added.', source: 'https://github.com/Asher-BoSiang/qnx-Intelligent-cockpit-hmi' },
+  experience: { role: 'Intelligent Cockpit HMI', company: 'AUO Corporation · Internship', description: 'Linux prototyping and C++ / Qt development for a QNX automotive head unit.', source: 'https://github.com/Asher-BoSiang/qnx-Intelligent-cockpit-hmi' },
   github: 'https://github.com/Asher-BoSiang',
   linkedin: 'https://www.linkedin.com/in/asher-bosiang-wang',
   email: 'asher.bs.wang@icloud.com',
   resume: 'https://asher-bosiang.github.io/portfolio-site/resume.pdf',
-  photo: '',
 };

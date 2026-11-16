@@ -8,7 +8,7 @@ test('all project records have distinct colors, safe source links, and complete 
   for(const file of files){const text=await readFile(new URL('../src/content/projects/'+file,import.meta.url),'utf8');
     const color=text.match(/themeColor: "(#[a-f0-9]{6})"/i)?.[1];assert.ok(color);colors.add(color);
     assert.match(text,/githubUrl: "https:\/\/github.com\/Asher-BoSiang\//);
-    for(const section of ['Overview','System architecture','Implementation','Technical challenges','Results','Source notes'])assert.ok(text.includes('## '+section),file+' missing '+section);
+    for(const section of ['Overview','System architecture','Implementation','Technical challenges','Results'])assert.ok(text.includes('## '+section),file+' missing '+section);
     assert.ok(!text.includes('acoustic-water-level-estimation'),'Unapproved private repository content must not be included');
   }
   assert.equal(colors.size,files.length);
