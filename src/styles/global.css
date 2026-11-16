@@ -43,7 +43,6 @@
   .profile-panel{padding-top:12px}
   .profile-grid{flex:none;padding-block:12px}
   .profile-copy{display:flex;flex-direction:column;align-items:flex-start}
-  .profile-copy .intro,.profile-copy .education{order:1}
   .contact-links{margin-top:14px}
   .profile-bottom{padding:10px 0}
   .explore-bar{height:36px}
@@ -58,3 +57,9 @@
   .project-overview .open-project{margin-top:6px}
   .profile-copy>h1{font-size:min(76px,15dvh)}
 }
+
+.profile-copy>h1>span{display:inline-block;margin-inline-start:.17em}
+.profile-copy .education{margin:0 0 15px;align-items:baseline}
+.prose .project-figure{margin:25px 0 30px;border:1px solid var(--line);background:#f6f5ef;padding:clamp(10px,2vw,22px)}
+.project-figure img{display:block;width:100%;height:auto;max-height:32rem;object-fit:contain}
+.project-figure figcaption{margin-top:14px;padding:10px 0 0 12px;border-top:1px solid var(--line);border-left:2px solid var(--accent);font:12px/1.6 monospace;color:#515b50}

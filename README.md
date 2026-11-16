@@ -71,7 +71,7 @@ Follow with `## Overview`, `## System architecture`, `## Implementation`, `## Te
 
 ## Personal information
 
-Edit `src/data/profile.ts`. Put a portrait and résumé in `public/` and supply their paths (include the configured base path for project-subpath hosting). Set `email`, `linkedin`, and `resume` to activate their links. Missing fields are visibly labeled rather than fabricated. Update internship dates and title after confirmation.
+Edit contact information in `src/data/profile.ts`. To update the résumé, replace the root-level `resume.pdf` in the public [portfolio-site repository](https://github.com/Asher-BoSiang/portfolio-site) and push to `main`. Pages publishes the replacement at the existing link. When syncing new website builds into the publishing repository, exclude `resume.pdf` to preserve the latest uploaded version.
 
 ## Interaction and accessibility
 
@@ -89,6 +89,6 @@ Static output is in `dist/`. The site URL is `https://asher-bosiang.github.io` a
 
 ## Verification and remaining review
 
-See `docs/verification.md` for executed checks and remaining browser limits, `docs/reference-analysis.md` for frame-based observations and adaptations, and `docs/content-provenance.md` for source limitations. Browser screenshots are generated under ignored `test-results/`. Automated Chromium tests cover the full sequence, reverse/cancel, keyboard, mobile swipe, reduced motion, fallback, direct routes, and no-JavaScript reading. Real mobile devices and Safari still require manual review. The profile portrait, résumé, contact details, and full experience dates need owner input.
+See `docs/verification.md` for executed checks and remaining browser limits, `docs/reference-analysis.md` for frame-based observations and adaptations, and `docs/content-provenance.md` for source limitations. Browser screenshots are generated under ignored `test-results/`. Automated Chromium tests cover the full sequence, reverse/cancel, keyboard, mobile swipe, reduced motion, fallback, direct routes, and no-JavaScript reading. Real mobile devices and Safari still require manual review. The profile portrait and full experience dates need owner input.
 
 No commit, push, pull request, repository visibility change, or deployment is performed by setup or build scripts.

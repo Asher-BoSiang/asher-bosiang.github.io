@@ -10,6 +10,11 @@ displayOrder: 4
 ## Overview
 A two-player memory game built around four AT89S52 microcontrollers and custom circuit boards. Players reproduce an LED pattern using matrix keypads while the system manages a countdown and score displays.
 
+<figure className="project-figure">
+  <img src={import.meta.env.BASE_URL + "project-images/memory.webp"} width="788" height="654" alt="Assembled game enclosure with two keypads, a central LED grid and score displays." loading="lazy" decoding="async" />
+  <figcaption>Each player enters a pattern on a separate keypad. Both players share the LED grid and score displays.</figcaption>
+</figure>
+
 ## System architecture
 <div className="architecture"><span>Two keypad MCUs</span><b>→ GPIO →</b><span>Game controller</span><b>→</b><span>LED / timer MCU</span></div>
 

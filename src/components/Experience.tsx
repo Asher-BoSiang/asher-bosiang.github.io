@@ -72,8 +72,17 @@ export default function Experience({projects,base,children}:{projects:Project[];
       <section className="profile-panel" aria-label="Personal profile" inert={phase!=='Profile'}>
         <div className="profile-topline"><p className="eyebrow"><span className="status-dot"/>Software meets the physical world</p><span className="micro">PORTFOLIO / VOL. 01</span></div>
         <div className="profile-grid">
-          <div className="profile-copy"><p className="eyebrow">Hello, I'm</p><h1>Asher<br/><span>Wang.</span></h1><h2>{profile.headline}</h2><button className="explore" disabled={!hydrated} onClick={explore}>Explore Projects <span>→</span></button><p className="intro">{profile.introduction}</p><div className="education"><span className="small-cross">+</span><div><strong>{profile.degree}</strong><span>{profile.university}</span></div></div>
-          <div className="contact-links"><a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>{profile.linkedin?<a href={profile.linkedin}>LinkedIn ↗</a>:<span title="LinkedIn URL has not been provided">LinkedIn <small>to add</small></span>}{profile.email?<a href={`mailto:${profile.email}`}>Email ↗</a>:<span>Email <small>to add</small></span>}{profile.resume?<a href={profile.resume}>Résumé ↓</a>:<span>Résumé <small>to add</small></span>}</div></div>
+          <div className="profile-copy"><p className="eyebrow">Hello, I'm</p><h1>Asher<br/><span>Wang.</span></h1>
+            <div className="education"><span className="small-cross">+</span><div><strong>{profile.university}</strong><span>{profile.degree}</span></div></div>
+            <h2>{profile.headline}</h2>
+            <button className="explore" disabled={!hydrated} onClick={explore}>Explore Projects <span>→</span></button>
+            <div className="contact-links">
+              <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href={`mailto:${profile.email}`}>Email ↗</a>
+              <a href={profile.resume} target="_blank" rel="noreferrer">Résumé ↗</a>
+            </div>
+          </div>
           <div className="profile-art" aria-label="Profile portrait placeholder">
             <div className="art-corner top">FIG. 01 / THE ENGINEER</div>
             {profile.photo?<img className="portrait" src={profile.photo} alt="Asher Wang"/>:<><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="orbit orbit-three"/><div className="portrait-monogram">aw<span>PORTRAIT TO BE ADDED</span></div><div className="orbit-point"/></>}

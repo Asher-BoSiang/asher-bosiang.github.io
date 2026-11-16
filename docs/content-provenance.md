@@ -13,4 +13,4 @@ Each MDX page links to the reviewed public sources. The archive contains origina
 
 The connected GitHub account also exposes the private acoustic water-level repository and this private portfolio repository. Private project content is not included. Adding it requires explicit approval of the material that may become public.
 
-Name, headline, degree, and university come from the user's brief. AUO internship context comes from the public cockpit README. Dates, exact role title, portrait, email, LinkedIn, and résumé remain unset or clearly labeled. Linux kernel and DSP are listed as interests, not unsupported completed-project claims.
+Name, headline, degree, and university come from the user's brief. AUO internship context comes from the public cockpit README. The owner supplied the email, LinkedIn URL, and résumé. Project figures are local WebP renditions of the images in each linked public README. The cockpit figure is a concept illustration. Linux kernel and DSP are listed as interests, not unsupported completed-project claims.

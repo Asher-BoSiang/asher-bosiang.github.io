@@ -15,6 +15,11 @@ An STM32F103 system connects an MPU6500 inertial sensor, W25Q64 SPI flash, and a
 
 Sensor, logger, and shell tasks separate acquisition, storage, and commands. A mutex protects shared sensor data; a receive queue transfers serial input to the parser. The logger writes to external flash over SPI.
 
+<figure className="project-figure">
+  <img src={import.meta.env.BASE_URL + "project-images/stm32.webp"} width="1440" height="810" alt="Block diagram connecting the MPU6500 and flash to FreeRTOS tasks and the host PC." loading="lazy" decoding="async" />
+  <figcaption>Sensor samples and flash logs share the STM32. The desktop tools communicate over UART.</figcaption>
+</figure>
+
 ## Implementation
 The byte-by-byte parser waits for a `0xAA` start byte, reads a command and payload length, then validates an XOR checksum. The source rejects payload lengths above 16 bytes. The host application uses Tkinter and pyserial for commands and telemetry.
 

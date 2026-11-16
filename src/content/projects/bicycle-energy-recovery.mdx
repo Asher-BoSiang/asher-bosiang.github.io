@@ -10,6 +10,11 @@ displayOrder: 3
 ## Overview
 A public-bicycle energy recovery prototype combines a hub generator, a bike node, a charging station, and a monitoring backend. Ride data is buffered locally and uploaded after docking.
 
+<figure className="project-figure">
+  <img src={import.meta.env.BASE_URL + "project-images/bicycle.webp"} width="1280" height="960" alt="Bicycle prototype with a front-wheel generator and electronics mounted above the wheel." loading="lazy" decoding="async" />
+  <figcaption>The prototype carries the generator at the front wheel and the electronics on the front rack.</figcaption>
+</figure>
+
 ## System architecture
 <div className="architecture"><span>Bike / SD buffer</span><b>→ docking →</b><span>Station / Wi-Fi</span><b>→</b><span>PHP / MySQL</span></div>
 
