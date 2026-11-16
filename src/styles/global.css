@@ -65,5 +65,5 @@
 .project-figure figcaption{margin-top:14px;padding:10px 0 0 12px;border-top:1px solid var(--line);border-left:2px solid var(--accent);font:12px/1.6 monospace;color:#515b50}
 
 /* Let the line field reach into the gutter between the two columns. */
-.profile-waves{width:calc(100% + 7vw);height:clamp(230px,37vh,390px);justify-self:center;align-self:center;display:block;touch-action:pan-y}
-@media(max-width:760px){.profile-waves{width:calc(100% + 7vw);height:145px}}
+.profile-waves{width:calc(100% + 11vw);height:clamp(275px,44vh,460px);justify-self:center;align-self:center;display:block;touch-action:pan-y}
+@media(max-width:760px){.profile-waves{width:calc(100% + 7vw);height:175px}}

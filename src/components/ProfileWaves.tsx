@@ -26,23 +26,25 @@ export default function ProfileWaves({active}: {active: boolean}) {
       ink.addColorStop(1, 'rgba(102,122,105,.10)');
       ctx.strokeStyle = ink;
       ctx.lineWidth = 1;
-      const rows = 25;
+      const rows = 30;
       for (let row = 0; row < rows; row++) {
         const v = row / (rows - 1);
         ctx.globalAlpha = .15 + .85 * Math.sin(v*Math.PI);
         ctx.beginPath();
         for (let x = 0; x <= width + 4; x += 4) {
           const u = x/width;
-          const y = height*(.24 + .54*v + .12*Math.sin(5*u + 1.9*v) - .13*u);
+          const bend = .088*Math.sin(2*Math.PI*u + 1.45*v);
+          const y = height*(.35 + .61*v - .31*u + bend);
           let offset = 0;
           for (const ripple of ripples) {
             const age = (now-ripple.start)/1000;
             const radius = Math.hypot(x-ripple.x, y-ripple.y);
-            const crest = (radius-age*210)/36;
-            offset += 13*Math.exp(-crest*crest)*(1-age/1.6)**2*Math.cos(crest*2.2);
+            const crest = (radius-age*155)/48;
+            offset += 5*Math.exp(-crest*crest)*(1-age/1.6)**2*Math.cos(crest*2.2);
           }
-          if (x === 0) ctx.moveTo(x,y+offset);
-          else ctx.lineTo(x,y+offset);
+          const displacedY = y + 7*Math.tanh(offset/7);
+          if (x === 0) ctx.moveTo(x,displacedY);
+          else ctx.lineTo(x,displacedY);
         }
         ctx.stroke();
       }
@@ -62,7 +64,7 @@ export default function ProfileWaves({active}: {active: boolean}) {
     function excite(event: PointerEvent) {
       if (!canvas || preference.matches) return;
       const now = performance.now();
-      if (ripples.length && now - ripples[ripples.length-1].start < 120) return;
+      if (ripples.length && now - ripples[ripples.length-1].start < 180) return;
       const bounds = canvas.getBoundingClientRect();
       ripples.push({x:event.clientX-bounds.left,y:event.clientY-bounds.top,start:now});
       if (!frame) frame = requestAnimationFrame(draw);
