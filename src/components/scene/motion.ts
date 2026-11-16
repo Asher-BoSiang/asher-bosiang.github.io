@@ -59,21 +59,22 @@ export const initialPose = () => ({ x: 0, y: .22, z: 0, ry: CASE_ANGLE + ROW_ANG
 export type Pose = ReturnType<typeof initialPose>;
 export function createOpeningTimeline(p: Pose, phase: (p: Phase) => void, complete: () => void) {
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'sine.inOut' }, onComplete: complete });
-  // Lid and player move while the case is still travelling. Each property has one owner.
+  // Lift straight up inside the slot. Rotation begins only after the shelf clears.
   tl.call(() => phase('Extracting'), [], 0)
-    .to(p, { x: 1.5, y: 1.4, z: 2.2, ry: .5, rx: -.25, scale: 1.2, duration: .9, ease:'power2.out' }, 0)
-    .to(p, { shelfY: -7, duration: .85 }, .1)
-    .call(() => phase('Opening'), [], .18)
-    .to(p, { lid: -2.45, duration: .65 }, .18)
-    .call(() => phase('DiscFloating'), [], .65)
-    .to(p, { discOut: 1.8, duration: .55 }, .65)
-    .call(() => phase('PlayerEntering'), [], .9)
-    .to(p, { playerY: 2.5, duration: .7 }, .9)
+    .to(p, { y: 3.45, duration: .55, ease: 'power2.out' }, 0)
+    .to(p, { shelfY: -7, duration: .55 }, 0)
+    .to(p, { x: 1.5, y: 2.25, z: 2.2, ry: .5, rx: -.25, scale: 1.2, duration: .68 }, .55)
+    .call(() => phase('Opening'), [], .55)
+    .to(p, { lid: -2.45, duration: .58 }, .55)
+    .call(() => phase('DiscFloating'), [], .9)
+    .to(p, { discOut: 1.8, duration: .55 }, .9)
+    .call(() => phase('PlayerEntering'), [], 1.03)
+    .to(p, { playerY: 2.5, duration: .7 }, 1.03)
     .call(() => phase('TrayExtending'), [], 1.35)
     .to(p, { tray: 2.5, duration: .45 }, 1.35)
     .call(() => phase('DiscLoading'), [], 1.75)
     .to(p, { discTravel: 1, duration: .75 }, 1.75)
-    .to(p, { caseExit: -12, duration: .65 }, 1.8)
+    .to(p, { caseExit: 1, duration: 1.05 }, 1.46)
     .call(() => phase('TrayRetracting'), [], 2.5)
     .to(p, { tray: 0, duration: .5 }, 2.5);
   return tl;

@@ -38,4 +38,4 @@ The collection at 5 seconds in the first clip and the closing frames of the seco
 
 The selected case rises from its current height along a 0.52-second ease-out curve. Nearby cases receive a separate ripple with a distance-dependent delay. Once the lift finishes, the selected case gradually joins the collection's slow travelling wave. The visible collection requests idle frames at 30 Hz. Reduced motion holds a static composition. An entrance wave, pointer movement and dragging also affect the shelf.
 
-The lid starts opening 0.18 seconds into the case movement. The player finishes loading at 3 seconds. Outgoing overview text fades for 160 milliseconds before the incoming project appears.
+The closed case lifts vertically for 0.55 seconds before it turns and opens above the shelf. The empty case travels offscreen to the left while the disc moves toward the player, then follows the same path back on return. The player finishes loading at 3 seconds. Outgoing overview text fades for 160 milliseconds before the incoming project appears.

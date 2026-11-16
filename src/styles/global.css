@@ -31,3 +31,28 @@
 
 .profile-copy .explore{display:inline-flex;align-items:center;gap:2rem;margin:10px 0 0;padding:12px 22px;background:#273c30;color:white;border-radius:3px;font-size:16px;font-weight:600;min-height:48px}
 .profile-copy .explore:hover,.profile-copy .explore:focus-visible{background:#405d49}
+
+.experience:not(.is-details){height:100dvh;min-height:0}
+.is-profile .profile-panel{bottom:0;height:auto;overflow-y:auto}
+.is-collection:not(.is-details) .collection-controls{height:clamp(48px,9dvh,80px)}
+.is-collection:not(.is-details) .project-overview{top:auto;bottom:calc(clamp(48px,9dvh,80px) + 12px)}
+@media(min-width:761px) and (max-height:820px){
+  .experience:not(.is-details) .site-header{height:64px}
+  .experience:not(.is-details) :is(.profile-panel,.collection-panel){top:64px}
+  .profile-panel{padding-top:12px}
+  .profile-grid{padding:10px 0;gap:5%}
+  .profile-copy>h1{font-size:clamp(45px,9dvh,74px);margin:6px 0 10px}
+  .profile-art{max-height:40dvh}
+  .profile-bottom{padding:10px 0}
+  .explore-bar{height:36px}
+  .project-overview{padding-top:12px}
+  .project-overview .category,.project-overview .overview-description,.project-overview .open-project{margin-top:12px}
+  .collection-top{height:44px}
+  .collection-heading{top:60px}
+}
+@media(max-height:560px){
+  .project-overview :is(.category,.tags,.overview-description){display:none}
+  .project-overview h3{font-size:22px}
+  .project-overview .open-project{margin-top:6px}
+  .profile-copy>h1{font-size:46px}
+}

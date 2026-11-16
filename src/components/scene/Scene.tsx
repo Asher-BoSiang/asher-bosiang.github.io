@@ -57,7 +57,7 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
       timeline.current.play();
       if(reduced) timeline.current.progress(1);
     } else if(phase==='Details' && reduced) {
-      Object.assign(pose.current,{x:1.5,y:1.4,z:2.2,ry:.5,rx:-.25,scale:1.2,lid:-2.45,discOut:1.8,discTravel:1,shelfY:-7,caseExit:-12,playerY:2.5,tray:0});invalidate();
+      Object.assign(pose.current,{x:1.5,y:1.4,z:2.2,ry:.5,rx:-.25,scale:1.2,lid:-2.45,discOut:1.8,discTravel:1,shelfY:-7,caseExit:1,playerY:2.5,tray:0});invalidate();
     } else if(phase==='Returning') {
       insertOnEntry.current=true;
       const tl=timeline.current;
@@ -97,14 +97,19 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
     if(m.enabled&&!reduced&&(m.time-m.enteredAt<2.5||m.time-m.pulseAt<4.5||Math.abs(m.x-previousX)+Math.abs(m.y-previousY)+Math.abs(m.drag-previousDrag)>.0001||m.energy>.002))invalidate();
     shelf.current.rotation.y=ROW_ANGLE;
     shelf.current.position.set(-2+driftX*.707,-.5+p.shelfY,driftZ-driftX*.707);
-    active.current.position.set(-2+p.x+driftX*.707,activeY-.5+p.caseExit+(archivesReturning ? 12*(1-THREE.MathUtils.clamp((timeline.current?.time() ?? 1)/.9,0,1))**2 : 0),p.z+driftZ-driftX*.707-(m.enabled?rowOffset:0));
+    active.current.position.set(-2+p.x+driftX*.707,activeY-.5+(archivesReturning ? 12*(1-THREE.MathUtils.clamp((timeline.current?.time() ?? 1)/.9,0,1))**2 : 0),p.z+driftZ-driftX*.707-(m.enabled?rowOffset:0));
+    // Move the empty case left along the screen plane, independently of the disc.
+    const exitDistance = camera instanceof THREE.OrthographicCamera ? size.width / camera.zoom + 4 : 24;
+    const exitOffset = p.caseExit * exitDistance * Math.SQRT1_2;
+    active.current.position.x -= exitOffset;
+    active.current.position.z += exitOffset;
     active.current.rotation.set(p.rx,p.ry,0); active.current.scale.setScalar(p.scale);
     lid.current.rotation.y=p.lid;
     player.current.position.set(0,p.playerY,-1.2);
     tray.current.position.z=p.tray;
     // The free disc shares the case transform until extraction, then follows a world-space arc.
     const a=matrixAnchor.current;
-    a.position.copy(active.current.position);a.position.y-=p.caseExit; a.rotation.set(p.rx,p.ry,0);a.scale.setScalar(p.scale);a.updateMatrixWorld();
+    a.position.copy(active.current.position);a.position.x+=exitOffset;a.position.z-=exitOffset; a.rotation.set(p.rx,p.ry,0);a.scale.setScalar(p.scale);a.updateMatrixWorld();
     worldPosition.current.set(.08,0,.12+p.discOut).applyMatrix4(a.matrixWorld);
     target.current.set(0,p.playerY+.065,-2+p.tray);
     disc.current.position.copy(worldPosition.current).lerp(target.current,p.discTravel);

@@ -54,9 +54,10 @@ test('selection ripple reaches nearby cases first and decays back to rest',()=>{
   assert.equal(ripple(0,.28,102),0);
   assert.equal(waveOffset(0,0,{...m,reduced:true}),0);
 });
-test('lid opens while case is moving; tray retracts only after the disc arrives',()=>{
+test('lid stays shut throughout vertical extraction and opens in clear space; tray retracts only after the disc arrives',()=>{
   const p=initialPose();const tl=createOpeningTimeline(p,()=>{},()=>{});
-  tl.seek(.35,true);assert.ok(p.x>0&&p.x<1.5);assert.ok(p.lid<0&&p.lid>-2.45);
+  tl.seek(.54,true);assert.equal(p.x,0);assert.equal(p.z,0);assert.equal(p.lid,0);assert.ok(p.y>3 && p.shelfY < -4);
+  tl.seek(.75,true);assert.ok(p.x>0&&p.x<1.5);assert.ok(p.lid<0&&p.lid>-2.45);
   tl.seek(2.49,true);assert.ok(p.discTravel<1);assert.equal(p.tray,2.5);
   tl.seek(2.6,true);assert.equal(p.discTravel,1);assert.ok(p.tray<2.5);
   assert.equal(tl.duration(),3);tl.kill();

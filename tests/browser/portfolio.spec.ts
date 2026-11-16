@@ -97,3 +97,18 @@ test('wheel and pointer motion move the archive without scrolling the page',asyn
   await page.getByRole('button',{name:'Explore Projects'}).click();
   expect(await canvas?.evaluate(el=>el.isConnected)).toBeTruthy();
 });
+
+test('primary actions fit without scrolling in short and narrow windows',async({page})=>{
+  await page.emulateMedia({reducedMotion:'reduce'});
+  for(const [width,height] of [[1272,650],[1024,540],[390,667]]){
+    await page.setViewportSize({width,height});
+    await page.goto('/?no3d');
+    const explore=page.getByRole('button',{name:'Explore Projects'});
+    await expect(explore).toBeInViewport({ratio:1});
+    await explore.click();
+    for(const name of [/Open project/,/Previous project/,/Next project/]){
+      await expect(page.getByRole('button',{name})).toBeInViewport({ratio:1});
+    }
+    expect(await page.evaluate(()=>scrollY)).toBe(0);
+  }
+});
