@@ -4,6 +4,8 @@ import { useFrame } from '@react-three/fiber';
 import { CASE_ANGLE, CASE_SPACING, decorativeColumns, entranceWave, waveOffset, type ArchiveMotion } from './motion';
 import type { Project } from '../../data/types';
 
+const SHELL_THICKNESS = .16;
+
 export function Disc({ color }: { color: string }) {
   return <group>
     <mesh rotation={[0,0,0]}><ringGeometry args={[.115, 1.04, 96]} /><meshStandardMaterial color="#cdd3d2" metalness={.83} roughness={.24} side={THREE.DoubleSide} /></mesh>
@@ -32,9 +34,35 @@ function Cover({ project }: { project: Project }) {
   useEffect(()=>()=>texture.dispose(),[texture]);
   return <mesh position={[0,0,.02]}><planeGeometry args={[2.29,2.29]}/><meshStandardMaterial map={texture} roughness={.7} side={THREE.DoubleSide}/></mesh>;
 }
+function SpineLabel({project}: {project: Project}) {
+  const texture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 80;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = project.themeColor;
+    ctx.fillRect(0,0,1024,80);
+    ctx.fillStyle = '#f2f1e8';
+    ctx.fillRect(46,9,912,62);
+    ctx.fillStyle = '#343d37';
+    ctx.font = 'bold 42px monospace';
+    ctx.fillText(String(project.displayOrder).padStart(2,'0'),61,54);
+    ctx.font = '32px sans-serif';
+    ctx.fillText(project.title,153,51,690);
+    for (let i=0;i<6;i++) ctx.fillRect(867+i*12,20,3+i%3,40);
+    const map = new THREE.CanvasTexture(canvas);
+    map.colorSpace = THREE.SRGBColorSpace;
+    return map;
+  }, [project]);
+  useEffect(()=>()=>texture.dispose(),[texture]);
+  return <mesh position={[0,1.263,.065]} rotation={[-Math.PI/2,0,0]}>
+    <planeGeometry args={[2.46,.19]}/>
+    <meshStandardMaterial map={texture} roughness={.48}/>
+  </mesh>;
+}
 export function JewelCase({ project, lidRef, selected, withDisc = true }: { project: Project; lidRef?: React.Ref<THREE.Group>; selected: boolean; withDisc?: boolean }) {
   return <group>
-    <mesh castShadow receiveShadow><boxGeometry args={[2.5,2.5,.16]}/><meshStandardMaterial color="#e0e2da" roughness={.4} metalness={.12}/></mesh>
+    <mesh castShadow receiveShadow><boxGeometry args={[2.5,2.5,SHELL_THICKNESS]}/><meshStandardMaterial color="#e0e2da" roughness={.4} metalness={.12}/></mesh>
     <mesh position={[-1.16,0,.09]} castShadow><boxGeometry args={[.18,2.49,.09]}/><meshStandardMaterial color="#c8cec3" roughness={.4}/></mesh>
     <mesh position={[0,1.254,.065]}><boxGeometry args={[2.49,.014,.25]}/><meshBasicMaterial color={project.themeColor} toneMapped={false}/></mesh>
     <mesh position={[0,1.27,.06]} rotation={[-Math.PI/2,0,0]} renderOrder={2}>
@@ -48,6 +76,14 @@ export function JewelCase({ project, lidRef, selected, withDisc = true }: { proj
           #include <colorspace_fragment>
           }`}/>
     </mesh>
+    <SpineLabel project={project}/>
+    <group position={[.08,0,.086]}>
+      <mesh><ringGeometry args={[1.055,1.095,96]}/><meshStandardMaterial color="#b8bdb2" roughness={.46}/></mesh>
+      <mesh position={[0,0,.006]}><ringGeometry args={[.073,.107,32]}/><meshStandardMaterial color="#a3aa9f" metalness={.28} roughness={.38}/></mesh>
+      {[0,1,2].map(index=><mesh key={index} rotation={[0,0,index*Math.PI*2/3]} position={[0,0,.008]}>
+        <ringGeometry args={[.14,.22,10,1,.18,1.68]}/><meshStandardMaterial color="#c7cbc1" roughness={.48}/>
+      </mesh>)}
+    </group>
     {withDisc && <group position={[.08,0,.12]}><Disc color={project.themeColor}/></group>}
     <group ref={lidRef} position={[-1.25,0,.13]}>
       <group position={[1.25,0,0]}>
@@ -72,12 +108,12 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
     const ctx = canvas.getContext('2d')!;
     ctx.fillStyle = '#efeee8';
     ctx.fillRect(0, 0, 512, 64);
-    ctx.fillStyle = '#d0cfc5';
-    ctx.fillRect(0, 48, 512, 3);
-    for (const x of [18, 24, 30, 470, 476]) ctx.fillRect(x, 8, 3, 34);
-    ctx.fillStyle = '#d9d5c7';
-    ctx.fillRect(55, 19, 92, 6);
-    ctx.fillRect(55, 29, 45, 3);
+    ctx.fillStyle = '#b2b2a7';
+    ctx.fillRect(0, 46, 512, 5);
+    for (const x of [15, 23, 31, 464, 472, 480]) ctx.fillRect(x, 7, 5, 35);
+    ctx.fillStyle = '#c5bba5';
+    ctx.fillRect(55, 15, 102, 10);
+    ctx.fillRect(55, 30, 51, 5);
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     return texture;
@@ -91,7 +127,7 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
       const wave = waveOffset(x, z, motion.current, column);
       const hill = .48 * Math.exp(-x*x/3 - z*z/5);
       dummy.rotation.set(0, CASE_ANGLE, 0);
-      dummy.position.set(x, -.32 + hill + entranceWave(x, z, motion.current) + wave, z + .061);
+      dummy.position.set(x, -.32 + hill + entranceWave(x, z, motion.current) + wave, z);
       dummy.updateMatrix();
       ref.current.setMatrixAt(i, dummy.matrix);
       dummy.translateY(1.25);
@@ -101,8 +137,8 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
     ref.current.instanceMatrix.needsUpdate=true;edgeRef.current.instanceMatrix.needsUpdate=true;
   });
   return <group>
-    <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow raycast={()=>null}><boxGeometry args={[2.5,2.5,.283]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
-    <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.022,.283]}/><meshStandardMaterial map={spineTexture} roughness={.38}/></instancedMesh>
+    <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow raycast={()=>null}><boxGeometry args={[2.5,2.5,SHELL_THICKNESS]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
+    <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.022,SHELL_THICKNESS]}/><meshStandardMaterial map={spineTexture} roughness={.38}/></instancedMesh>
   </group>;
 }
 export function Player({ trayRef, color }: { trayRef: React.Ref<THREE.Group>; color: string }) {
