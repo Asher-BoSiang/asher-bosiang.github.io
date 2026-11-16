@@ -34,9 +34,10 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
   useEffect(()=>{const environment=new RoomEnvironment();const pmrem=new THREE.PMREMGenerator(gl);const map=pmrem.fromScene(environment,.06);scene.environment=map.texture;scene.environmentIntensity=.35;invalidate();return()=>{scene.environment=null;map.dispose();pmrem.dispose();environment.dispose();};},[gl,scene,invalidate]);
   useEffect(()=>{
     const mobile=size.width<760;
-    camera.position.set(mobile?8.6:10,mobile?9.1:9,10);
+    const baseline = mobile ? 0 : .65;
+    camera.position.set(mobile?8.6:10,(mobile?9.1:9)+baseline,10);
     if(camera instanceof THREE.OrthographicCamera) camera.zoom=mobile?size.width/7:Math.min(size.width/13.6,Math.max(size.height, size.width >= 1600 ? 850 : 750)/8);
-    camera.lookAt(mobile?-1.4:0,mobile?.6:.5,0); camera.updateProjectionMatrix(); invalidate();
+    camera.lookAt(mobile?-1.4:0,(mobile?.6:.5)+baseline,0); camera.updateProjectionMatrix(); invalidate();
   },[camera,size.width,size.height,invalidate]);
   useLayoutEffect(()=>{
     liftStart.current = heights.current[selected] ?? 0;
@@ -79,6 +80,18 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
   useFrame((_,delta)=>{
     const p=pose.current;const m=motion.current;const inputValue=input.current;const dt=Math.min(delta,.05);
     m.time=performance.now()/1000;m.enabled=phase==='Collection';m.reduced=reduced;
+    // Translate the camera with the lift, preserving its viewing angle and the final player framing.
+    const mobile = size.width < 760;
+    const baseY = mobile ? 9.1 : 9.65;
+    camera.position.y = baseY + p.framing * 1.65;
+    camera.position.x = (mobile ? 8.6 : 10) - p.framing * 1.15;
+    camera.position.z = 10 + p.framing * 1.15;
+    if (camera instanceof THREE.OrthographicCamera) {
+      const shelfZoom = mobile ? size.width/7 : Math.min(size.width/13.6, Math.max(size.height,size.width>=1600?850:750)/8);
+      const openingZoom = Math.min(shelfZoom,size.width/9,size.height/8);
+      const zoom = THREE.MathUtils.lerp(shelfZoom,openingZoom,p.framing);
+      if (zoom !== camera.zoom) { camera.zoom = zoom; camera.updateProjectionMatrix(); }
+    }
     const previousX=m.x;const previousY=m.y;const previousDrag=m.drag;
     m.x=THREE.MathUtils.damp(m.x,inputValue.x,9,dt);m.y=THREE.MathUtils.damp(m.y,inputValue.y,9,dt);m.drag=THREE.MathUtils.damp(m.drag,inputValue.drag,12,dt);
     m.energy=Math.max(m.energy,inputValue.energy);inputValue.energy=0;m.energy=THREE.MathUtils.damp(m.energy,0,3.5,dt);

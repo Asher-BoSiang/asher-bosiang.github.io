@@ -55,12 +55,13 @@ export function waveOffset(x:number,z:number,m:ArchiveMotion,column = x) {
   else if (Number.isFinite(m.releasedX)) strength = -.8;
   return idleWave(x,z,m.time) + strength * rowPulse(z,age) + Math.exp(-distance)*m.energy*.16;
 }
-export const initialPose = () => ({ x: 0, y: .22, z: 0, ry: CASE_ANGLE + ROW_ANGLE, rx: 0, scale: 1, lid: 0, discOut: 0, discTravel: 0, shelfY: 0, caseExit: 0, playerY: 12, tray: 0 });
+export const initialPose = () => ({ x: 0, y: .22, z: 0, ry: CASE_ANGLE + ROW_ANGLE, rx: 0, scale: 1, lid: 0, discOut: 0, discTravel: 0, shelfY: 0, caseExit: 0, framing: 0, playerY: 12, tray: 0 });
 export type Pose = ReturnType<typeof initialPose>;
 export function createOpeningTimeline(p: Pose, phase: (p: Phase) => void, complete: () => void) {
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'sine.inOut' }, onComplete: complete });
   // Lift straight up inside the slot. Rotation begins only after the shelf clears.
   tl.call(() => phase('Extracting'), [], 0)
+    .to(p, { framing: 1, duration: .55, ease: 'power2.out' }, 0)
     .to(p, { y: 3.45, duration: .55, ease: 'power2.out' }, 0)
     .to(p, { shelfY: -7, duration: .55 }, 0)
     .to(p, { x: 1.5, y: 2.25, z: 2.2, ry: .5, rx: -.25, scale: 1.2, duration: .68 }, .55)
@@ -76,6 +77,7 @@ export function createOpeningTimeline(p: Pose, phase: (p: Phase) => void, comple
     .to(p, { discTravel: 1, duration: .75 }, 1.75)
     .to(p, { caseExit: 1, duration: 1.05 }, 1.46)
     .call(() => phase('TrayRetracting'), [], 2.5)
+    .to(p, { framing: 0, duration: .85 }, 2.15)
     .to(p, { tray: 0, duration: .5 }, 2.5);
   return tl;
 }

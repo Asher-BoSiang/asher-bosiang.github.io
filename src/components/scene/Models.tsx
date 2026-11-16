@@ -65,6 +65,24 @@ export function JewelCase({ project, lidRef, selected, withDisc = true }: { proj
 export function DecorativeCases({motion,browsing,projectCount}:{motion:React.RefObject<ArchiveMotion>;browsing:React.RefObject<{index:number}>;projectCount:number}) {
   const ref=useRef<THREE.InstancedMesh>(null!); const edgeRef=useRef<THREE.InstancedMesh>(null!);
   const dummy=useMemo(()=>new THREE.Object3D(),[]);
+  const spineTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#efeee8';
+    ctx.fillRect(0, 0, 512, 64);
+    ctx.fillStyle = '#d0cfc5';
+    ctx.fillRect(0, 48, 512, 3);
+    for (const x of [18, 24, 30, 470, 476]) ctx.fillRect(x, 8, 3, 34);
+    ctx.fillStyle = '#d9d5c7';
+    ctx.fillRect(55, 19, 92, 6);
+    ctx.fillRect(55, 29, 45, 3);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+  useEffect(() => () => spineTexture.dispose(), [spineTexture]);
   const positions=useMemo(()=>decorativeColumns(projectCount),[projectCount]);
   useFrame(()=>{
     if (!motion.current.enabled && ref.current.instanceMatrix.version > 0) return;
@@ -84,7 +102,7 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
   });
   return <group>
     <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow raycast={()=>null}><boxGeometry args={[2.5,2.5,.283]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
-    <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.022,.283]}/><meshStandardMaterial color="#fafaf4" roughness={.38}/></instancedMesh>
+    <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.022,.283]}/><meshStandardMaterial map={spineTexture} roughness={.38}/></instancedMesh>
   </group>;
 }
 export function Player({ trayRef, color }: { trayRef: React.Ref<THREE.Group>; color: string }) {
