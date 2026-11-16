@@ -64,12 +64,6 @@
 .project-figure img{display:block;width:100%;height:auto;max-height:32rem;object-fit:contain}
 .project-figure figcaption{margin-top:14px;padding:10px 0 0 12px;border-top:1px solid var(--line);border-left:2px solid var(--accent);font:12px/1.6 monospace;color:#515b50}
 
-/* A ribbon of fine elliptical sections, lit by the page background. */
-.profile-sculpture{width:min(100%,530px);aspect-ratio:1.38;justify-self:center;align-self:center;position:relative;pointer-events:none}
-.sculpture-ribbon{position:absolute;inset:12% 7%;transform:rotate(-10deg)}
-.sculpture-ribbon i{position:absolute;width:29%;height:58%;border:1.3px solid #778778;border-radius:50%}
-@media(prefers-reduced-motion:no-preference){
-  .is-profile .sculpture-ribbon{animation:ribbon-drift 9s ease-in-out infinite alternate}
-  @keyframes ribbon-drift{from{transform:rotate(-12deg) skewY(-3deg)}to{transform:rotate(-6deg) skewY(4deg)}}
-}
-@media(max-width:760px){.profile-sculpture{width:min(95%,340px);height:180px}}
+/* Let the line field reach into the gutter between the two columns. */
+.profile-waves{width:calc(100% + 7vw);height:clamp(230px,37vh,390px);justify-self:center;align-self:center;display:block;touch-action:pan-y}
+@media(max-width:760px){.profile-waves{width:calc(100% + 7vw);height:145px}}

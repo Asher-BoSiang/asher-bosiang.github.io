@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import ProfileWaves from './ProfileWaves';
 import TextPresence from './TextPresence';
 import { profile } from '../data/profile';
 import type { Phase, Project } from '../data/types';
@@ -83,19 +84,7 @@ export default function Experience({projects,base,children}:{projects:Project[];
               <a href={profile.resume} target="_blank" rel="noreferrer">Résumé ↗</a>
             </div>
           </div>
-          <div className="profile-sculpture" aria-hidden="true">
-            <div className="sculpture-ribbon">
-              {Array.from({length:56},(_,i)=>{
-                const t = i / 55;
-                return <i key={i} style={{
-                  left: (13 + 72*t) + '%',
-                  top: (57 - 25*Math.sin(t * Math.PI * 1.7)) + '%',
-                  transform: `translate(-50%,-50%) rotate(${-46 + 105*t}deg) scaleX(${.18 + .56*Math.sin(Math.PI*t)**2})`,
-                  borderColor: i % 9 === 0 ? '#b5a680' : undefined,
-                }}/>;
-              })}
-            </div>
-          </div>
+          <ProfileWaves active={phase==='Profile'}/>
         </div>
         <div className="profile-bottom"><div><p className="eyebrow">Technical toolkit</p><div className="skill-line">{profile.skills.map(s=><span key={s}>{s}</span>)}</div><p className="interests">Exploring / {profile.interests.join(' · ')}</p></div><div className="experience-note"><p className="eyebrow">Experience</p><strong>{profile.experience.company}</strong><p>{profile.experience.role}</p></div></div>
         <div className="explore-bar"><span className="micro">A COLLECTION OF SYSTEMS & IDEAS</span><a className="micro" href="#project-index">Browse text index ↗</a></div>
