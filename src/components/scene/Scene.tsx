@@ -28,6 +28,9 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
   const worldPosition = useRef(new THREE.Vector3());
   const target = useRef(new THREE.Vector3());
   const rotation = useRef(new THREE.Quaternion());
+  const focus = useRef(new THREE.Vector3());
+  const lidCenter = useRef(new THREE.Vector3());
+  const cameraSpace = useRef(new THREE.Vector3());
   const flatRotation = useRef(new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI/2,0,0)));
   const currentPhase = useRef(phase); currentPhase.current=phase;
   useEffect(()=>{onReady();},[onReady]);
@@ -80,12 +83,7 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
   useFrame((_,delta)=>{
     const p=pose.current;const m=motion.current;const inputValue=input.current;const dt=Math.min(delta,.05);
     m.time=performance.now()/1000;m.enabled=phase==='Collection';m.reduced=reduced;
-    // Translate the camera with the lift, preserving its viewing angle and the final player framing.
     const mobile = size.width < 760;
-    const baseY = mobile ? 9.1 : 9.65;
-    camera.position.y = baseY + p.framing * 1.65;
-    camera.position.x = (mobile ? 8.6 : 10) - p.framing * 1.15;
-    camera.position.z = 10 + p.framing * 1.15;
     if (camera instanceof THREE.OrthographicCamera) {
       const shelfZoom = mobile ? size.width/7 : Math.min(size.width/13.6, Math.max(size.height,size.width>=1600?850:750)/8);
       const openingZoom = Math.min(shelfZoom,size.width/9,size.height/8);
@@ -130,6 +128,33 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
     rotation.current.setFromEuler(a.rotation);
     disc.current.quaternion.copy(rotation.current).slerp(flatRotation.current,p.discTravel);
     disc.current.scale.setScalar(THREE.MathUtils.lerp(p.scale,1,p.discTravel));
+    if (camera instanceof THREE.OrthographicCamera) {
+      // The exposed band is what reads as the selected record among the surrounding spines.
+      const subject = focus.current.set(-2, SELECTED_HEIGHT - .5 + 1.02, 0);
+      const shelfFocus = m.enabled || phase === 'Profile';
+      if (!shelfFocus) {
+        const opening = THREE.MathUtils.smoothstep(-p.lid, 0, 2.45);
+        const unfolded = lidCenter.current.set(1.25, 0, 0)
+          .applyAxisAngle(lid.current.up, p.lid)
+          .add(lid.current.position).applyMatrix4(a.matrixWorld);
+        subject.copy(a.position);
+        subject.y += 1.02 * (1 - THREE.MathUtils.smoothstep(-p.shelfY, 0, 7));
+        subject.lerp(unfolded, opening * .45);
+        const discWeight = THREE.MathUtils.smoothstep(p.discOut, 0, 1.8) * (.55 + .45 * p.caseExit);
+        subject.lerp(disc.current.position, discWeight);
+        // Let the returning case fly into a stationary shelf composition.
+        if (archivesReturning) subject.y -= 12*(1-THREE.MathUtils.clamp((timeline.current?.time() ?? 1)/.9,0,1))**2;
+      }
+      camera.position.set(mobile ? 8.6 : 10, mobile ? 9.1 : 9.65, 10);
+      camera.updateMatrixWorld();
+      const local = cameraSpace.current.copy(subject).applyMatrix4(camera.matrixWorldInverse);
+      const followX = Math.max(p.framing, p.discTravel);
+      camera.translateX(local.x * followX);
+      // Account for the desktop navigation above the canvas when centering in the page.
+      const topInset = mobile ? 0 : Math.max(0, window.innerHeight - size.height);
+      camera.translateY(local.y - topInset / (2 * camera.zoom));
+      camera.updateMatrixWorld();
+    }
     // The disc and tray use the same moving target after loading; no reparenting jump.
     disc.current.visible=currentPhase.current!=='Profile' && active.current.visible;
 
