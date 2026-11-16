@@ -2,7 +2,7 @@ import gsap from 'gsap';
 import type { Phase } from '../../data/types';
 export const ROW_ANGLE = Math.PI / 2;
 export const CASE_ANGLE = 0;
-export const CASE_SPACING = 2.59;
+export const CASE_SPACING = 2.66;
 export interface ArchiveInput { x:number; y:number; drag:number; energy:number; invalidate:()=>void }
 export interface ArchiveMotion { time:number; enteredAt:number; pulseAt:number; pulseX:number; releasedX:number; x:number; y:number; drag:number; energy:number; enabled:boolean; reduced:boolean }
 // In shelf coordinates x runs along a cover and z follows its normal.
@@ -11,7 +11,7 @@ export function decorativeColumns(projectCount: number): Array<[number, number]>
   for (let column = -7; column < projectCount + 7; column++) {
     for (let depth = -60; depth <= 60; depth++) {
       if (depth === 0 && column >= 0 && column < projectCount) continue;
-      cases.push([column * CASE_SPACING, depth * .28]);
+      cases.push([column * CASE_SPACING, depth * .38]);
     }
   }
   return cases;

@@ -7,8 +7,8 @@ test('case width follows the project row and blank cases fill its face-normal ax
   assert.equal(CASE_ANGLE,0);
   const cells = decorativeColumns(4);
   for(let project=0; project<4; project++){
-    const depths = cells.filter(([x])=>Math.abs(x-project*2.59)<.001).map(([,z])=>z);
-    assert.ok(depths.includes(.28) && depths.includes(-.28));
+    const depths = cells.filter(([x])=>Math.abs(x-project*2.66)<.001).map(([,z])=>z);
+    assert.ok(depths.includes(.38) && depths.includes(-.38));
     assert.ok(!depths.includes(0));
   }
   const camera=new PerspectiveCamera(38,1.5,.1,100);

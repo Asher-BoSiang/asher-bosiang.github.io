@@ -2,12 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test('profile, collection, complete loading sequence, and reverse preserve selection', async ({page})=>{
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.setViewportSize({width:1272,height:650});
   await page.goto('/');
   await expect(page.getByRole('heading',{name:'Asher Wang.'})).toBeVisible();
   await page.screenshot({path:'test-results/profile.png',fullPage:false});
   await page.getByRole('button',{name:'Explore Projects'}).click();
   await expect(page.locator('.experience')).toHaveAttribute('data-phase','Collection');
   await expect(page.getByRole('button',{name:'Open project',exact:false})).toBeEnabled({timeout:20000});
+  const collectionBounds = await page.locator('.scene-window').boundingBox();
   await page.screenshot({path:'test-results/collection.png'});
   await page.getByRole('button',{name:'Next project',exact:true}).click();
   await expect(page.locator('.project-overview h3')).toHaveText('Intelligent Cockpit HMI');
@@ -21,6 +23,7 @@ test('profile, collection, complete loading sequence, and reverse preserve selec
   await expect(page.locator('.experience')).toHaveAttribute('data-phase','Details',{timeout:10000});
   await expect(page.locator('.project-article:visible')).toContainText('Bicycle Energy Recovery');
   await expect(page.locator('.project-article:visible')).toHaveCSS('opacity','1');
+  expect(await page.locator('.scene-window').boundingBox()).toEqual(collectionBounds);
   await page.locator('canvas').screenshot({path:'test-results/details.png'});
   await page.getByRole('button',{name:'Back to Collection',exact:false}).first().click();
   await expect(page.locator('.experience')).toHaveAttribute('data-phase','Collection',{timeout:10000});
@@ -105,6 +108,7 @@ test('primary actions fit without scrolling in short and narrow windows',async({
     await page.goto('/?no3d');
     const explore=page.getByRole('button',{name:'Explore Projects'});
     await expect(explore).toBeInViewport({ratio:1});
+    await expect(page.locator('.contact-links a').first()).toBeInViewport({ratio:1});
     await explore.click();
     for(const name of [/Open project/,/Previous project/,/Next project/]){
       await expect(page.getByRole('button',{name})).toBeInViewport({ratio:1});

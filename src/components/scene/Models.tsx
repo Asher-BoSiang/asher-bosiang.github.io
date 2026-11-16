@@ -73,7 +73,7 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
       const wave = waveOffset(x, z, motion.current, column);
       const hill = .48 * Math.exp(-x*x/3 - z*z/5);
       dummy.rotation.set(0, CASE_ANGLE, 0);
-      dummy.position.set(x, -.32 + hill + entranceWave(x, z, motion.current) + wave, z);
+      dummy.position.set(x, -.32 + hill + entranceWave(x, z, motion.current) + wave, z + .061);
       dummy.updateMatrix();
       ref.current.setMatrixAt(i, dummy.matrix);
       dummy.translateY(1.25);
@@ -83,8 +83,8 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
     ref.current.instanceMatrix.needsUpdate=true;edgeRef.current.instanceMatrix.needsUpdate=true;
   });
   return <group>
-    <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow raycast={()=>null}><boxGeometry args={[2.5,2.5,.14]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
-    <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.035,.16]}/><meshStandardMaterial color="#fafaf4" roughness={.38}/></instancedMesh>
+    <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow raycast={()=>null}><boxGeometry args={[2.5,2.5,.283]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
+    <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.022,.283]}/><meshStandardMaterial color="#fafaf4" roughness={.38}/></instancedMesh>
   </group>;
 }
 export function Player({ trayRef, color }: { trayRef: React.Ref<THREE.Group>; color: string }) {

@@ -35,7 +35,7 @@ function World({input,projects, selected, phase, reduced, onPhase, onSelect, onR
   useEffect(()=>{
     const mobile=size.width<760;
     camera.position.set(mobile?8.6:10,mobile?9.1:9,10);
-    if(camera instanceof THREE.OrthographicCamera) camera.zoom=mobile?size.width/7:Math.min(size.width/13.6,size.height/8);
+    if(camera instanceof THREE.OrthographicCamera) camera.zoom=mobile?size.width/7:Math.min(size.width/13.6,Math.max(size.height, size.width >= 1600 ? 850 : 750)/8);
     camera.lookAt(mobile?-1.4:0,mobile?.6:.5,0); camera.updateProjectionMatrix(); invalidate();
   },[camera,size.width,size.height,invalidate]);
   useLayoutEffect(()=>{
