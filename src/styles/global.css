@@ -66,5 +66,5 @@
 
 /* Stretch the field independently of the text so it can reach the right trim. */
 .profile-grid{position:relative}
-.profile-waves{position:absolute;inset:-2% -4.3vw -2% auto;width:55vw;height:104%;display:block;touch-action:pan-y;mask-image:linear-gradient(180deg,transparent,#000 10%,#000 87%,transparent)}
+.profile-waves{position:absolute;inset:2% -4.3vw 2% auto;width:55vw;height:96%;display:block;touch-action:pan-y;mask-image:linear-gradient(180deg,transparent,#000 10%,#000 87%,transparent)}
 @media(max-width:760px){.profile-waves{position:static;width:calc(100% + 7vw);height:205px;justify-self:center}}

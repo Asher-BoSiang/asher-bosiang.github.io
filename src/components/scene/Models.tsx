@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { CASE_ANGLE, CASE_SPACING, decorativeColumns, entranceWave, waveOffset, type ArchiveMotion } from './motion';
 import type { Project } from '../../data/types';
 
@@ -99,6 +99,24 @@ export function JewelCase({ project, lidRef, selected, withDisc = true }: { proj
   </group>;
 }
 export function DecorativeCases({motion,browsing,projectCount}:{motion:React.RefObject<ArchiveMotion>;browsing:React.RefObject<{index:number}>;projectCount:number}) {
+  const { gl, invalidate } = useThree();
+  const hovered = useRef<number | null>(null);
+  const hoverLifts = useRef<number[]>([]);
+  const hoverPulses = useRef<Array<{index:number;at:number;direction:number}>>([]);
+  const selectHover = (index: number | null) => {
+    if (index === hovered.current) return;
+    const now = performance.now()/1000;
+    if (hovered.current !== null) hoverPulses.current.push({index:hovered.current,at:now,direction:-1});
+    if (index !== null) hoverPulses.current.push({index,at:now,direction:1});
+    hoverPulses.current = hoverPulses.current.slice(-12);
+    hovered.current=index;
+    invalidate();
+  };
+  useEffect(() => {
+    const clear = () => selectHover(null);
+    gl.domElement.addEventListener('pointerleave', clear);
+    return () => gl.domElement.removeEventListener('pointerleave', clear);
+  },[gl]);
   const ref=useRef<THREE.InstancedMesh>(null!); const edgeRef=useRef<THREE.InstancedMesh>(null!);
   const dummy=useMemo(()=>new THREE.Object3D(),[]);
   const spineTexture = useMemo(() => {
@@ -120,24 +138,49 @@ export function DecorativeCases({motion,browsing,projectCount}:{motion:React.Ref
   }, []);
   useEffect(() => () => spineTexture.dispose(), [spineTexture]);
   const positions=useMemo(()=>decorativeColumns(projectCount),[projectCount]);
-  useFrame(()=>{
+  useFrame((_,delta)=>{
     if (!motion.current.enabled && ref.current.instanceMatrix.version > 0) return;
+    const now=performance.now()/1000;
+    if (!motion.current.enabled || motion.current.reduced) {
+      hovered.current=null;
+      hoverPulses.current=[];
+    }
+    hoverPulses.current=hoverPulses.current.filter(p=>now-p.at<2.2);
+    let moving=false;
     positions.forEach(([column,z],i)=>{
       const x = column - browsing.current.index * CASE_SPACING;
       const wave = waveOffset(x, z, motion.current, column);
+      const targetLift = hovered.current===i ? .13 : 0;
+      const lift=THREE.MathUtils.damp(hoverLifts.current[i] ?? 0,targetLift,9,Math.min(delta,.05));
+      hoverLifts.current[i]=lift;
+      if (Math.abs(lift-targetLift)>.0001) moving=true;
+      let echo=0;
+      for (const pulse of hoverPulses.current) {
+        const [originX,originZ]=positions[pulse.index];
+        const distance=Math.abs(z-originZ);
+        const age=(now-pulse.at-distance*.28)/.7;
+        if (i===pulse.index || age<=0 || age>=1) continue;
+        const strength=column===originX ? .065 : .012;
+        echo+=pulse.direction*strength*Math.exp(-distance*.7-Math.abs(column-originX)*.6)*Math.sin(age*Math.PI)**2;
+      }
       const hill = .48 * Math.exp(-x*x/3 - z*z/5);
       dummy.rotation.set(0, CASE_ANGLE, 0);
-      dummy.position.set(x, -.32 + hill + entranceWave(x, z, motion.current) + wave, z);
+      dummy.position.set(x, -.32 + hill + entranceWave(x, z, motion.current) + wave + lift + THREE.MathUtils.clamp(echo,-.08,.08), z);
       dummy.updateMatrix();
       ref.current.setMatrixAt(i, dummy.matrix);
       dummy.translateY(1.25);
       dummy.updateMatrix();
       edgeRef.current.setMatrixAt(i, dummy.matrix);
     });
+    if (moving || hoverPulses.current.length) invalidate();
     ref.current.instanceMatrix.needsUpdate=true;edgeRef.current.instanceMatrix.needsUpdate=true;
   });
   return <group>
-    <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow raycast={()=>null}><boxGeometry args={[2.5,2.5,SHELL_THICKNESS]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
+    <instancedMesh ref={ref} args={[undefined,undefined,positions.length]} frustumCulled={false} receiveShadow onPointerMove={e=>{
+      const nearest = e.intersections.find(hit=>hit.object===ref.current);
+      if(nearest?.instanceId!==e.instanceId) return;
+      if(motion.current.enabled&&!motion.current.reduced&&e.pointerType!=='touch') selectHover(e.instanceId ?? null);
+    }} onPointerOut={()=>selectHover(null)}><boxGeometry args={[2.5,2.5,SHELL_THICKNESS]}/><meshStandardMaterial color="#e5e5de" roughness={.58}/></instancedMesh>
     <instancedMesh ref={edgeRef} args={[undefined,undefined,positions.length]} frustumCulled={false} raycast={()=>null}><boxGeometry args={[2.5,.022,SHELL_THICKNESS]}/><meshStandardMaterial map={spineTexture} roughness={.38}/></instancedMesh>
   </group>;
 }

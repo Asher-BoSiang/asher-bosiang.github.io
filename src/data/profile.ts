@@ -9,5 +9,5 @@ export const profile = {
   github: 'https://github.com/Asher-BoSiang',
   linkedin: 'https://www.linkedin.com/in/asher-bosiang-wang',
   email: 'asher.bs.wang@icloud.com',
-  resume: 'https://asher-bosiang.github.io/portfolio-site/resume.pdf',
+  resume: `${import.meta.env.BASE_URL}resume.pdf`,
 };

@@ -63,13 +63,14 @@ export default function ProfileWaves({active}: {active: boolean}) {
     function draw(now: number) {
       frame = 0;
       if (!ctx || !width || !height) return;
-      ripples = ripples.filter(r => now - r.start < 1050);
+      ripples = ripples.filter(r => now - r.start < 1600);
       const contactAge = contact ? (now-contact.start)/420 : 1;
       const contactLift = 18 * Math.max(0, 1-contactAge)**2;
       ctx.clearRect(0, 0, width, height);
       const ink = ctx.createLinearGradient(0, 0, width, 0);
       ink.addColorStop(0, 'rgba(102,122,105,0)');
-      ink.addColorStop(.18, 'rgba(102,122,105,.37)');
+      ink.addColorStop(.08, 'rgba(102,122,105,.24)');
+      ink.addColorStop(.4, 'rgba(102,122,105,.45)');
       ink.addColorStop(.72, 'rgba(102,122,105,.62)');
       ink.addColorStop(1, 'rgba(102,122,105,.28)');
       ctx.strokeStyle = ink;
@@ -86,11 +87,11 @@ export default function ProfileWaves({active}: {active: boolean}) {
           for (const ripple of ripples) {
             const age = (now-ripple.start)/1000;
             const radius = Math.hypot(x-ripple.x, y-ripple.y);
-            const crest = (radius-age*145)/42;
-            offset += 2.55*Math.exp(-crest*crest)*(1-age/1.05)**3;
+            const crest = (radius-age*210)/36;
+            offset += 13*Math.exp(-crest*crest)*(1-age/1.6)**2*Math.cos(crest*2.2);
           }
           const proximity = contact && contactLift ? Math.exp(-((x-contact.x)**2 + (y-contact.y)**2)/3800) : 0;
-          const displacedY = y - contactLift*proximity + 3*Math.tanh(offset/3);
+          const displacedY = y - contactLift*proximity + 14*Math.tanh(offset/14);
           if (i % 2 === 0) ctx.moveTo(x,displacedY);
           else ctx.lineTo(x,displacedY);
         }
